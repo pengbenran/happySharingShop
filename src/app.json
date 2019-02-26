@@ -1,0 +1,38 @@
+{
+  "pages": [
+    "pages/index/main", 
+    "pages/order/main",
+    "pages/shop/main",
+    "pages/order-detail/main"
+    ], 
+  "window": { 
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "WeChat",
+    "navigationBarTextStyle": "black"
+  },  
+    "tabBar": {
+    "selectedColor":"#01a4bf", 
+    
+    "list": [
+      { 
+        "pagePath": "pages/index/main",
+        "iconPath": "/static/images/index.png", 
+        "selectedIconPath": "/static/images/index1.png",
+        "text": "收益" 
+      },
+      {
+        "pagePath": "pages/shop/main",  
+        "iconPath": "/static/images/shop.png",
+        "selectedIconPath": "/static/images/shop1.png",
+        "text": "商品"
+      },
+      {  
+        "pagePath": "pages/order/main",
+        "iconPath": "/static/images/order.png",
+        "selectedIconPath": "/static/images/order1.png",
+        "text": "订单"
+      }
+    ]
+  }
+}
