@@ -1,6 +1,8 @@
 {
   "pages": [
-    "pages/index/main", 
+    
+    "pages/index/main",
+     "pages/demo/main", 
     "pages/order/main",
     "pages/shop/main",
     "pages/order-detail/main"
@@ -12,14 +14,14 @@
     "navigationBarTextStyle": "black"
   },  
     "tabBar": {
+    "color":"#999999",
     "selectedColor":"#01a4bf", 
-    
     "list": [
       { 
         "pagePath": "pages/index/main",
         "iconPath": "/static/images/index.png", 
         "selectedIconPath": "/static/images/index1.png",
-        "text": "收益" 
+        "text": "收益"  
       },
       {
         "pagePath": "pages/shop/main",  

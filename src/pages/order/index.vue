@@ -1,45 +1,55 @@
 <template>
-	<!--类目-->
 	<div class="container">
-		<div class="order-nav">
-			<div @click="change(index)" v-for="(item,index) in nav" class="order-nav-li" :class="item.isSelect? 'active':''">
-				{{item.name}}
+		<!--分类-->
+		<scroll-view scroll-x>
+			<div class="order-nav">
+				<div @click="change(index)" v-for="(item,index) in nav" class="order-nav-li" :class="curr==index? 'active':''">
+					{{item.name}}
+				</div>
 			</div>
-		</div>
-
-		<!--列表-->
-		<div class="rec-wrap centered">
-			<div class="rec-li" v-for="(goodlist , index) in rec" :key="goodlist.recId">
-				<div class="center">
-					<div class="cant clr">
-						<div class="img fl"><img :src="goodlist.img" /></div>
-						<div class="rec-center fl">
-							<div class="tit">{{goodlist.title}}</div>
-							<div class="name">{{goodlist.name}}</div>
-							<div class="present ">￥:{{goodlist.price}}</div>
-							<div class="time ">{{goodlist.time}}</div>
-							<!---->
-							<div class="top">
-								<span>订单编号:{{goodlist.sn}}</span>
-								<span>下单时间:2019-08-32 </span>
+		</scroll-view>
+		<!--数据-->
+		<swiper  style="height:100vh;"   duration='350' :current="curr" @change="changeTab">
+			<!--1-->
+			<swiper-item> 
+				<div class="rec-wrap centered">
+					<div class="rec-li" v-for="(goodlist , index) in rec" :key="goodlist.recId">
+						<div class="center">
+							<div class="cant clr"> 
+								<div class="img fl"><img :src="goodlist.img" /></div>
+								<div class="rec-center fl">
+									<div class="tit">{{goodlist.title}}</div>
+									<div class="name">{{goodlist.name}}</div>
+									<div class="present ">￥:{{goodlist.price}}</div>
+									<div class="time ">{{goodlist.time}}</div>
+									<!---->
+									<div class="top">
+										<span>订单编号:{{goodlist.sn}}</span>
+										<span>下单时间:2019-08-32 </span>
+									</div>
+								</div>
+								<div class="rec-right fr">
+									<div class="num ">数量 : {{goodlist.num}}</div>
+									<div class="total">订单总额:{{goodlist.orderAmount}}</div>
+								</div>
 							</div>
 						</div>
-						<div class="rec-right fr">							
-							<div class="num ">数量 : {{goodlist.num}}</div>
-							<div class="total">订单总额:{{goodlist.orderAmount}}</div>
+						<div class="xian"></div>
+						<div class="bottom">
+							<span>买家名称</span>
+							<span @click="orderDetail">订单详情</span>
 						</div>
 					</div>
 				</div>
-				<div class="bottom">
-					<span>买家名称</span>
-					<span @click="orderDetail">订单详情</span>
-				</div>
-
-			</div>
-		</div>
-
-		<!--空空如也-->
-		<!-- <div class="not" style="display: none;"><img src="/static/images/not.png"/></div> -->
+			</swiper-item>
+			<!--2-->
+			<swiper-item > 1</swiper-item>
+			<!--3-->
+			<swiper-item> 2 </swiper-item>
+			<!--4-->
+			<swiper-item> 3 </swiper-item>
+		</swiper>
+			
 	</div>
 </template>
 
@@ -47,19 +57,15 @@
 	export default {
 		data() {
 			return {
-				unionid: '',
+				curr: 0,
 				nav: [{
 					name: "全部",
-					isSelect: true
 				}, {
 					name: "待付款",
-					isSelect: false
 				}, {
 					name: "待使用",
-					isSelect: false
 				}, {
 					name: "已使用",
-					isSelect: false
 				}],
 				rec: [{
 					sn: 1212121,
@@ -109,37 +115,14 @@
 		},
 
 		methods: {
-			async onload() {
-				let that = this;
-				let data = {
-					unionId: Store.state.userInfo.unionid
-				}
-				// console.log()
-				let res = await API_ORDER.getOrderList(data).catch(err => {
-					Lib.showToast('失败', 'loading')
-				})
-				console.log(res, "查看请求参数")
-			},
-			change(index) {
+			change(e) {
 				let that = this
-				that.nav.map(item => {
-					item.isSelect = false
-					return item
-				})
-				that.nav[index].isSelect = true
-				console.log(that.nav)
+				that.curr = e
 			},
-			orderDetail() {
-                    wx.navigateTo({
-                    	url:'../order-detail/main'
-                    })
+			changeTab(e) {
+				this.curr = e.mp.detail.current;
 			}
 		},
-		//		onLoad(){
-		//			this.unionid = Store.state.userInfo.unionid
-		//			console.log(Store.state.userInfo,"asdasda")
-		//          this.onload();
-		//		},
 
 		created() { // 调用应用实例的方法获取全局数据
 
@@ -149,6 +132,15 @@
 
 <style scoped lang="less">
 	/*空空如也*/
+	
+	.xian {
+		width: 100%;
+		height: 1px;
+		background-color: #dedede;
+		padding: 0 12px;
+		box-sizing: border-box;
+		margin: 12px 0;
+	}
 	
 	.not {
 		width: 133px;
@@ -164,6 +156,7 @@
 		position: fixed;
 		top: 0;
 		display: flex;
+		z-index: 99;
 		justify-content: space-around;
 		background-color: #fff;
 		width: 100%;
@@ -175,10 +168,9 @@
 			font-size: 14px;
 			color: #111111;
 		}
-		.active { 
-			color:#01a4bf;
-             border-bottom:1px solid #1AAD19;
-
+		.active {
+			color: #01a4bf;
+			border-bottom: 1px solid #01a4bf;
 		}
 	}
 	/*列表*/
@@ -189,9 +181,9 @@
 			margin-top: 56px;
 		}
 		.top {
-			span{
+			span {
 				font-size: 12px;
-				color: #999999;				
+				color: #999999;
 				display: block;
 			}
 		}
@@ -244,10 +236,9 @@
 				/*line-height: 65px;*/
 				text-align: right;
 				.total {
-				    color: #333333;
+					color: #333333;
 					font-size: 12px;
 					line-height: 68px;
-					
 				}
 				.num {
 					color: #999999;

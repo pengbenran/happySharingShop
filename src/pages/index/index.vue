@@ -7,7 +7,7 @@
         <div class="earnings-top">
         	<p>
         		<span>总收益</span>
-        		<span>84566</span>
+        		<span>84566</span> 
         	</p>
         	<p></p>
         </div>  
@@ -19,12 +19,12 @@
         	<p></p>
         </div>
       </div>
-      <div class="more">
+      <div @click="jump" class="more">
       	    <p>查看更多效果</p>
         	<p></p>
       </div>
 	</div>
-</template>
+</template> 
 
 <script>
 	export default {
@@ -38,7 +38,11 @@
 		}, 
 
 		methods: {
-
+jump:function(){
+	wx.navigateTo({
+		url:'../demo/main'
+	})
+}
 		},
 
 	}
