@@ -7,30 +7,45 @@
         <div class="earnings-top">
         	<p>
         		<span>总收益</span>
-        		<span>84566</span>
+        		<span>{{allAmount}}</span>
         	</p>
         	<p></p>
         </div>  
         <div class="earnings-bottom">
         	<p>
         		<span>今日收益</span>
-        		<span>3424</span>
+        		<span>{{amount}}</span>
         	</p>
         	<p></p>
         </div>
       </div>
-      <div class="more">
-      	    <p>查看更多效果</p>
-        	<p></p>
-      </div>
+     <!--  <div class="more">
+      	<p class="picker">查看更多效果</p>
+      	<p></p>
+      </div> -->
+      <div class="section">
+      	<picker
+      	mode="date"
+      	:value="date"
+      	bindchange="bindDateChange"
+      	>
+      	<div class="chooseDate">
+      		查看更多收益
+      	</div>
+      </picker>
+  </div>
 	</div>
 </template>
 
 <script>
+	import Api from '@/api/api'
+	import NumberAnimate from "@/utils/NumberAnimate.js"
 	export default {
 		data() {
 			return {
-				
+				allAmount:0,
+				amount:0,
+				num2:'',
 			}
 		},
 		components: {
@@ -38,8 +53,49 @@
 		}, 
 
 		methods: {
+			animateAmount(endvalue){
+				let that=this
+				let amount = new NumberAnimate({
+					from:endvalue,
+					speed:2000,
+					refreshTime:100,
+					decimals:2,
+					onUpdate:()=>{
+					 that.amount=amount.tempValue
+					},
+					onComplete:()=>{
 
+					}
+				});
+			},
+			animateAllAmount(endvalue){
+				let that=this
+				let allAmount = new NumberAnimate({
+					from:endvalue,
+					speed:2000,
+					refreshTime:100,
+					decimals:2,
+					onUpdate:()=>{
+					 that.allAmount=allAmount.tempValue
+					},
+					onComplete:()=>{
+
+					}
+				});
+			}		
 		},
+		mounted(){
+			let params={}
+			let that=this
+			params.shopId=wx.getStorageSync('shopId')
+			params.currentday= (new Date()).getTime();
+			Api.orderAmount(params).then(function(res){
+				if(res.code==0){
+					that.animateAmount(100.22)
+					that.animateAllAmount(300.44)
+				}
+			})
+		}
 
 	}
 </script>
@@ -104,15 +160,13 @@
 			margin-top: 20px;
 		}
 	}
-		.more{
+		.section{
 			position: relative;
 			z-index: 99;
 			width: 351px;
 			height: 44px;
 			margin:  20px auto 51px auto;
-			p{
-				display: block;
-				&:nth-child(1){
+			.chooseDate{
 					position: absolute;
 					top: 0px;
 			        left: 0;
@@ -124,20 +178,6 @@
 					line-height:44px;
 					color: #067ef9;
 					font-size: 15px;
-					span{
-						
-					}
 				}
-				&:nth-child(2){
-					width: 80%;
-				    height: 100%;
-					background: #c8e1fa;
-					margin: auto;
-					top: 0px;
-					left: 0;
-					box-shadow: 0 5px 10px rgba(6,126,249,.3);
-					
-				}
-			}
 		}
 </style>

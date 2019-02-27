@@ -1,5 +1,6 @@
 {
   "pages": [
+    "pages/Login/main",
     "pages/index/main", 
     "pages/order/main",
     "pages/shop/main",
@@ -12,8 +13,7 @@
     "navigationBarTextStyle": "black"
   },  
     "tabBar": {
-    "selectedColor":"#01a4bf", 
-    
+    "selectedColor":"#01a4bf",   
     "list": [
       { 
         "pagePath": "pages/index/main",

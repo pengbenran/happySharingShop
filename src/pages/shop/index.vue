@@ -24,6 +24,7 @@
 </template>
 
 <script>
+	import api from "@/api/api"
 	export default {
 		data() {
 			return {
@@ -47,8 +48,22 @@
            tabs:function(index){            	
            	 let that = this
            	 that.curr = index
+           },
+           getGoods(status){
+           	let params={}
+           	params.pageNum=1
+           	params.pageSize=10
+           	params.shopId=wx.getStorageSync('shopId')
+           	params.status=1
+           	api.getGoods(params).then(function(res){
+           		console.log(res)
+           	})
            }
 		},
+		mounted(){
+			let that=this
+			that.getGoods(1)
+		}
 
 	}
 </script>
