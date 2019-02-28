@@ -22,6 +22,8 @@
 							</p>
 						</div>
 					</div>
+					<!--空空如也--> 
+					<div class="not" v-if="shopStatus1.length==0"><img src="/static/images/not.png" /></div>
 				</div>
 			</swiper-item>
 			<!--已下架的数据-->
@@ -40,6 +42,8 @@
 							</p>
 						</div>
 					</div>
+					<!--空空如也--> 
+					<div class="not"  v-if="shopStatus2.length==0"><img src="/static/images/not.png" /></div>
 				</div>
 			</swiper-item>
 		</swiper>
@@ -51,7 +55,7 @@
 	export default {
 		data() {
 			return {
-//				hei:"1000px",
+				//				hei:"1000px",
 				curr: 0,
 				tab: [{
 						title: "已上架"
@@ -71,21 +75,20 @@
 			tabs: function(e) {
 				this.curr = e
 			},
-			getGoods(status){
-				let params={}
-				let that=this
-				params.pageNum=1
-				params.pageSize=100
-				params.shopId=wx.getStorageSync('shopId')
-				params.status=status
-				api.getGoods(params).then(function(res){
-					if(status==1){
-						that.shopStatus1=res.rows
+			getGoods(status) {
+				let params = {}
+				let that = this
+				params.pageNum = 1
+				params.pageSize = 100
+				params.shopId = wx.getStorageSync('shopId')
+				params.status = status
+				api.getGoods(params).then(function(res) {					
+					if(status == 1) {
+						that.shopStatus1 = res.rows
+					} else {
+						that.shopStatus2 = res.rows
 					}
-					else{
-						that.shopStatus2=res.rows
-					}
-					return 
+					return
 				})
 			},
 			changeTab(e) {
@@ -93,22 +96,34 @@
 			}
 		},
 
-		async mounted(){
-			let that=this
-			await that.getGoods(1)
-			await that.getGoods(2)
+		async mounted() {
+			let that = this;
+			await that.getGoods(1);
+			await that.getGoods(2);
 		}
 	}
-	</script>
-
+</script>
 
 <style scoped lang="less">
+	/**空空如也*/ 
+	.not {
+		width: 133px;
+		height: 181px;
+		position: absolute;
+		left: 50%;
+		top: 112px;
+		margin-left: -66.5px;
+	}
+	
 	.tab {
 		width: 100%;
 		background: #FFFFFF;
 		height: 40px;
 		display: flex;
 		justify-content: center;
+		position: fixed;
+		top: 0;
+		z-index: 99;
 		span {
 			display: block;
 			width: 44px;
@@ -127,12 +142,13 @@
 		.on {
 			color: #01a4bf;
 			border-bottom: 4px solid #01a4bf;
-			border-radius: 2px;  
+			border-radius: 2px;
 		}
 	}
 	
 	.shop {
 		width: 100%;
+		padding-top: 40px;
 		padding-bottom: 40px;
 		.shop-li {
 			display: flex;
@@ -146,7 +162,7 @@
 			.shop-li-img {
 				width: 60px;
 				height: 60px;
-				background-color: orange;
+				/*background-color: orange;*/
 				margin-right: 12px;
 				border-radius: 6px;
 				overflow: hidden;
@@ -158,7 +174,8 @@
 						color: #111111;
 						font-size: 15px;
 						font-weight: bold;
-						width:260px;
+						width: 260px;
+						line-height: 22px;
 					}
 					&:nth-child(2) {
 						color: #666666;

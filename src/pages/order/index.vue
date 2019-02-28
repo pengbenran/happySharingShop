@@ -6,6 +6,7 @@
 				<div @click="change(index)" v-for="(item,index) in nav" class="order-nav-li" :class="curr==index? 'active':''">
 					{{item.name}}
 				</div>
+					 
 			</div>
 		</scroll-view>
 		<!--数据-->
@@ -13,18 +14,23 @@
 			<!--1-->
 			<swiper-item style="overflow: scroll;"> 
 				<orderList :orderList="orderList"></orderList>
+				<!--空空如也--> 
+				<div class="not"  v-if="orderList.length==0"><img src="/static/images/not.png" /></div>				
 			</swiper-item>
 			<!--2-->
 			<swiper-item>
-				2
+				<!--空空如也--> 
+				<div class="not"  v-if="true"><img src="/static/images/not.png" /></div>
 			</swiper-item>
 			<!--3-->
 			<swiper-item>
-				3
+				<!--空空如也--> 
+			<div class="not"  v-if="true"><img src="/static/images/not.png" /></div>
 			</swiper-item>
 			<!--4-->
 			<swiper-item>
-				4
+				<!--空空如也--> 
+				<div class="not"  v-if="true"><img src="/static/images/not.png" /></div>
 			</swiper-item>
 		</swiper>
 
@@ -107,8 +113,15 @@
 </script>
 
 <style scoped lang="less">
-	/*空空如也*/
-	
+	/**空空如也*/ 
+	.not {
+		width: 133px;
+		height: 181px;
+		position: absolute;
+		left: 50%;
+		top: 112px;
+		margin-left: -66.5px;
+	}
 	.xian {
 		width: 100%;
 		height: 1px;
