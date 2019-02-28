@@ -8,7 +8,7 @@
 						<div class="tit fontHidden">{{goodlist.goodName}}</div>
 						<!-- <div class="name">{{goodlist.name}}</div> -->
 						<div class="present ">￥:{{goodlist.goodsAmount}}</div>
-						<div class="time ">{{goodlist.time}}</div>
+						<div class="time "></div>
 						<!---->
 						<div class="top">
 							<span>订单编号:{{goodlist.sn}}</span>
@@ -74,17 +74,15 @@ export default {
 					line-height: 24px;
 				}
 				.name {
-					font-size: 12px;
-					color: #999999;
+					color: #111111;
+					font-size: 15px;
+					font-weight: bold; 
 				}
 				.present {
 					color: #ff0000;
 					font-size: 17px;
 				}
-				.name {
-					font-size: 12px;
-					color: #999999;
-				}
+			
 				.original {
 					text-decoration: line-through;
 					color: #999999;

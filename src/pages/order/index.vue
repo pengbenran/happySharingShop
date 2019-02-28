@@ -15,13 +15,19 @@
 				<orderList :orderList="orderList"></orderList>
 			</swiper-item>
 			<!--2-->
-			<swiper-item > 1</swiper-item>
+			<swiper-item>
+				2
+			</swiper-item>
 			<!--3-->
-			<swiper-item> 2 </swiper-item>
+			<swiper-item>
+				3
+			</swiper-item>
 			<!--4-->
-			<swiper-item> 3 </swiper-item>
+			<swiper-item>
+				4
+			</swiper-item>
 		</swiper>
-			
+
 	</div>
 </template>
 
@@ -57,6 +63,12 @@
 				that.curr = e
 			},
 			changeTab(e) {
+				this.curr = e.mp.detail.current;
+			},
+			orderDetail(){
+				wx.navigateTon({
+					url:'../order-detail/main'
+				})
 				let that=this
 				that.curr = e.mp.detail.current;
 			    that.getAllOrder(that.curr)
@@ -125,16 +137,18 @@
 		background-color: #fff;
 		width: 100%;
 		.order-nav-li {
-			flex-grow: 1;
-			height: 38px;
-			line-height: 38px;
+			/*flex-grow: 1;*/
+			height: 36px;
+			line-height: 36px;
 			text-align: center;
 			font-size: 14px;
 			color: #111111;
+			width: 44px;
 		}
 		.active {
 			color: #01a4bf;
-			border-bottom: 1px solid #01a4bf;
+			border-bottom:4px solid #01a4bf;
+			border-radius: 2px; 
 		}
 	}
 </style>
