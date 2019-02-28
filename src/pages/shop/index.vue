@@ -1,12 +1,10 @@
 <template>
 	<div class="container">
-     
 		<scroll-view scroll-x>
 			<div class="tab">
 				<span v-for="(item,index) in tab" :key="index" @click="tabs(index)" :class="curr==index?'on':''">{{item.title}}</span>
 			</div>
 		</scroll-view>
-
 		<swiper style="height:100vh" duration='350' :current="curr" @change="changeTab">
 			<!--已上架的数据-->
 			<swiper-item>
@@ -95,17 +93,7 @@
 				this.curr = e.mp.detail.current;
 			}
 		},
-		onLoad:function(){
-        var that = this
-        wx.getSystemInfo({
-            success: function (res) {
-               console.log()
-            }
-        })
     }
-
-
-	}
 </script>
 
 <style scoped lang="less">
@@ -117,8 +105,8 @@
 		justify-content: center;
 		span {
 			display: block;
-			width: 50px;
-			height: 38px;
+			width: 44px;
+			height: 36px;
 			color: #999999;
 			text-align: center;
 			line-height: 40px;
@@ -132,7 +120,8 @@
 		}
 		.on {
 			color: #01a4bf;
-			border-bottom: 1px solid #01a4bf;
+			border-bottom: 4px solid #01a4bf;
+			border-radius: 2px;  
 		}
 	}
 	

@@ -9,13 +9,13 @@
 			</div>
 		</scroll-view>
 		<!--数据-->
-		<swiper  style="height:100vh;"   duration='350' :current="curr" @change="changeTab">
+		<swiper style="height:100vh;" duration='350' :current="curr" @change="changeTab">
 			<!--1-->
-			<swiper-item> 
+			<swiper-item>
 				<div class="rec-wrap centered">
 					<div class="rec-li" v-for="(goodlist , index) in rec" :key="goodlist.recId">
 						<div class="center">
-							<div class="cant clr"> 
+							<div class="cant clr">
 								<div class="img fl"><img :src="goodlist.img" /></div>
 								<div class="rec-center fl">
 									<div class="tit">{{goodlist.title}}</div>
@@ -43,13 +43,19 @@
 				</div>
 			</swiper-item>
 			<!--2-->
-			<swiper-item > 1</swiper-item>
+			<swiper-item>
+				2
+			</swiper-item>
 			<!--3-->
-			<swiper-item> 2 </swiper-item>
+			<swiper-item>
+				3
+			</swiper-item>
 			<!--4-->
-			<swiper-item> 3 </swiper-item>
+			<swiper-item>
+				4
+			</swiper-item>
 		</swiper>
-			
+
 	</div>
 </template>
 
@@ -121,6 +127,11 @@
 			},
 			changeTab(e) {
 				this.curr = e.mp.detail.current;
+			},
+			orderDetail(){
+				wx.navigateTon({
+					url:'../order-detail/main'
+				})
 			}
 		},
 
@@ -161,16 +172,18 @@
 		background-color: #fff;
 		width: 100%;
 		.order-nav-li {
-			flex-grow: 1;
-			height: 38px;
-			line-height: 38px;
+			/*flex-grow: 1;*/
+			height: 36px;
+			line-height: 36px;
 			text-align: center;
 			font-size: 14px;
 			color: #111111;
+			width: 44px;
 		}
 		.active {
 			color: #01a4bf;
-			border-bottom: 1px solid #01a4bf;
+			border-bottom:4px solid #01a4bf;
+			border-radius: 2px; 
 		}
 	}
 	/*列表*/
@@ -210,17 +223,15 @@
 					line-height: 24px;
 				}
 				.name {
-					font-size: 12px;
-					color: #999999;
+					color: #111111;
+					font-size: 15px;
+					font-weight: bold; 
 				}
 				.present {
 					color: #ff0000;
 					font-size: 17px;
 				}
-				.name {
-					font-size: 12px;
-					color: #999999;
-				}
+			
 				.original {
 					text-decoration: line-through;
 					color: #999999;
