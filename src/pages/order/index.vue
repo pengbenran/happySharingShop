@@ -6,6 +6,7 @@
 				<div @click="change(index)" v-for="(item,index) in nav" class="order-nav-li" :class="curr==index? 'active':''">
 					{{item.name}}
 				</div>
+					 
 			</div>
 		</scroll-view>
 		<!--数据-->
@@ -13,6 +14,7 @@
 			<!--1-->
 			<swiper-item style="overflow: scroll;"> 
 				<orderList :orderList="orderList"></orderList>
+				<!--空空如也--> 	
 			</swiper-item>
 			<!--2-->
 			<swiper-item style="overflow: scroll;"> 
@@ -102,25 +104,9 @@
 </script>
 
 <style scoped lang="less">
-	/*空空如也*/
-	
-	.xian {
-		width: 100%;
-		height: 1px;
-		background-color: #dedede;
-		padding: 0 12px;
-		box-sizing: border-box;
-		margin: 12px 0;
-	}
-	
-	.not {
-		width: 133px;
-		height: 181px;
-		position: absolute;
-		left: 50%;
-		top: 112px;
-		margin-left: -65px;
-	}
+	/**空空如也*/ 
+
+
 	/*导航*/
 	
 	.order-nav {

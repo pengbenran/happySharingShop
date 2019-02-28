@@ -39,8 +39,8 @@ fly.interceptors.response.use(
         // Do something with response error
     }
 )  
-// let base='https://zhifenxiang.guqinet.com'
-let base='http://192.168.2.112:8012'
+let base='https://zhifenxiang.guqinet.com'
+// let base='http://192.168.2.112:8012'
 export const userLogin=(url, params)=>{
    return fly.post(`${url}`,params,{headers: {
       'Content-Type': 'application/x-www-form-urlencoded'

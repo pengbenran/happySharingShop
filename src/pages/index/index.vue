@@ -67,7 +67,7 @@
 				});
 			},
 			bindDateChange(e) {
-				let time="24:00"
+				let time="23:59"
 				let that=this
 				that.date=e.mp.detail.value
 				var stringTime =that.date+ ' ' + time;
@@ -93,14 +93,13 @@
 			getorderAmount(currentday){
 				let params = {}
 				let that = this
-				wx.showLoading({title: '加载中',})
+				wx.showLoading({title: '查询中',})
 				params.shopId = wx.getStorageSync('shopId')
 				params.currentday = currentday;
 				Api.orderAmount(params).then(function(res) {
 					if(res.code == 0) {
 						wx.hideLoading()
 						that.animateAmount(res.amount)
-						that.animateAllAmount(res.allAmount)
 					}
 				})
 			}
@@ -108,7 +107,17 @@
 		mounted() {
 			let that=this
 			let nowTime=(new Date()).getTime()
-			that.getorderAmount(nowTime)
+			let params = {}
+			wx.showLoading({title: '查询中',})
+			params.shopId = wx.getStorageSync('shopId')
+			params.currentday = nowTime;
+			Api.orderAmount(params).then(function(res) {
+				if(res.code == 0) {
+					wx.hideLoading()
+					that.animateAmount(res.amount)
+					that.animateAllAmount(res.allAmount)
+				}
+			})
 		}
 
 	}

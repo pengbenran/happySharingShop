@@ -20,8 +20,8 @@ import Api from '@/api/api'
 export default {
   data () {
     return {
-      username:'admin',
-      password:'111111'
+      username:'',
+      password:''
     }
   },
 
@@ -62,8 +62,8 @@ export default {
   },
    onShareAppMessage: function () {
     return {
-      title: '谷琴客户运营助手',
-      desc: '谷琴客户运营助手',
+      title: '抹哒抹哒商家版小程序',
+      desc: '抹哒抹哒商家版小程序',
       path: 'pages/Login/main'
     }
   }

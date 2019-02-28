@@ -26,6 +26,7 @@
 				<span @click="orderDetail(index)">订单详情</span>
 			</div>
 		</div>
+		<div class="not" v-if="orderList.length==0"><img src="/static/images/not.png" /></div>
 	</div>
 </template>
 
@@ -52,7 +53,22 @@ export default {
 
 <style scoped lang="less">
 /*列表*/
-	
+	.not {
+		width: 133px;
+		height: 181px;
+		position: absolute;
+		left: 50%;
+		top: 112px;
+		margin-left: -66.5px;
+	}
+	.xian {
+		width: 100%;
+		height: 1px;
+		background-color: #dedede;
+		padding: 0 12px;
+		box-sizing: border-box;
+		margin: 12px 0;
+	}
 	.rec-li {
 		padding-bottom: 36px;
 		&:nth-child(1) {
