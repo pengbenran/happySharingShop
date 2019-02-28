@@ -3,45 +3,45 @@
 		<div class="order-detail">
 			<!--模块1-->
 			<div class="title">
-				<span>{{title}}</span>
+				<span></span>
 				<span>{{state}}</span>
 			</div>
 			<!---->
 			<!--模块2-->
-			<div class="rec-li " v-for="(goodlist,index) in rec">
+			<div class="rec-li ">
 				<div class="rec-li-warp clr">
-					<div class="img fl"><img :src="goodlist.img" /></div>
+					<div class="img fl"><img :src="orderDetail.thumbnail" /></div>
 					<div class="rec-center fl">
-						<div class="tit">{{goodlist.title}}</div>
-						<div class="name">{{goodlist.name}}</div>
-						<div class="present "><span>￥:{{goodlist.present}}</span> <span>原价:{{goodlist.original}}</span></div>
-						<div v-if="goodlist.isshow" class="dianzhan">点赞:{{goodlist.dianzhan}}</div>
+						<div class="tit fontHidden">{{orderDetail.goodName}}</div>
+						<!-- <div class="name">{{orderDetail.name}}</div> -->
+						<div class="present "><span>￥:{{orderDetail.goodsAmount}}</span></div>
 					</div>
 					<div class="rec-right fr">
 						<div class="clr">
-							<div class="make fr">{{goodlist.make}}</div>
-						</div>
-						<div class="people ">{{goodlist.people}}</div>
-						<div class="sell ">已售:{{goodlist.sell}}</div>
+						</div>	
 					</div>
 				</div>
 				<!--总价-->
 				<div class="prices">
 					<div class="price1">
 						<span>商品总价: </span>
-						<span> ¥ {{present}}</span>
+						<span> ¥ {{orderDetail.goodsAmount}}</span>
 					</div>
 					<div class="price2">
-						<span>推荐师：</span>
-						<span> ¥ {{rate}}</span>
+						<span>推荐师优惠：</span>
+						<span> ¥ {{orderDetail.recommend}}</span>
 					</div>
 					<div class="price3">
-						<span>订单总价：</span>
-						<span> ¥ {{total}}</span>
+						<span>会员折扣：</span>
+						<span> ¥ {{orderDetail.discount*10}}折</span>
+					</div>
+					<div class="price3">
+						<span>佣金抵扣：</span>
+						<span> ¥ {{orderDetail.balance}}</span>
 					</div>
 					<div class="price4">
 						<span>实付金额：</span>
-						<span> ¥ {{total}}</span>
+						<span> ¥ {{orderDetail.needPayMoney}}</span>
 					</div>
 				</div>
 			</div>
@@ -49,30 +49,26 @@
 			<!--订单详情-->
 			<div class="detail-order">
 				<div class="tit">订单信息</div>
-				<div v-for="(item,index) in detailOrder" class="detail-order-li">
+				<div class="detail-order-li">
 					<div>
-						<span>预定人:</span>
-						<span>{{item.reservations}}</span>
+						<span>买家姓名:</span>
+						<span>{{orderDetail.memberName}}</span>
 					</div>
 					<div>
 						<span>预定数量:</span>
-						<span>{{item.quantity}}</span>
+						<span>{{orderDetail.goodsNum}}</span>
 					</div>
 					<div>
-						<span>联系电话:</span>
-						<span>{{item.phone}}</span>
-					</div>
-					<div>
-						<span>积分:</span>
-						<span>{{item.integral}}</span>
+						<span>获得积分:</span>
+						<span>{{orderDetail.gainedpoint}}</span>
 					</div>
 					<div>
 						<span>下单时间:</span>
-						<span>{{item.days}}</span>
+						<span>{{orderDetail.createTime}}</span>
 					</div>
 					<div>
 						<span>备注信息:</span>
-						<span>{{item.remarks}}</span>
+						<span>{{orderDetail.buyRemark}}</span>
 					</div>
 				</div>
 			</div>
@@ -81,64 +77,24 @@
 </template>
 
 <script>
+	import store from '@/store/store'
 	export default {
 		data() {
 			return {
-				detailOrder: [{
-
-					reservations: "小明",
-					quantity: 1,
-					phone: 15932325588,
-					integral: 30,
-					days: "2018-12-07  11:34:38",
-					remarks: "这是我要说的一段备注信息，我也不知道说什么",
-
-				}],
-				codeNumber: "3053558899432156515",
-				code: "/static/images/code.png",
-				title: "买家不可使用",
-				state: "已取消",
-				rec: [{
-					recId: 1,
-					img: "/static/images/d.png",
-					title: "西江月园林火锅",
-					name: "世茂/金塔/新力/莲塘/四店通用",
-					make: "免预约",
-					desc: "西江月园林艺术餐厅，真正的艺术赣菜,快来抢购！",
-					original: 223,
-					present: 16.99,
-					rate: 6.98,
-					discounts: "83",
-					people: "2人",
-					sell: "2368",
-					dianzhan: "1188"
-				}, ]
+				orderDetail:{},
+				title: "买家不可使用"
 			}
 		},
 		computed: {
-			present() {
-				for(var i in this.rec) {
-					var present = this.rec[i].present.toFixed(2);
-					return present;
-				};
-			},
-			rate() {
-				for(var i in this.rec) {
-					var rate = this.rec[i].rate.toFixed(2);
-					return rate;
-
-				};
-			},
-			total() {
-				for(var i in this.rec) {
-					var present = this.rec[i].present.toFixed(2);
-					var rate = this.rec[i].rate.toFixed(2);
-					var total = (present - rate).toFixed(2);
-					return total;
-				};
+			state(){
+				let that=this
+				return that.orderDetail.status==1?'待付款':that.orderDetail.status==2?"待使用":"已使用"
 			}
-
 		},	
+		mounted(){
+			let that=this
+			that.orderDetail=store.state.goodDetail
+		}
 	}
 </script>
 

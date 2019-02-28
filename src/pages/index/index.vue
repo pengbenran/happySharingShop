@@ -16,14 +16,14 @@
 					</div>
 					<div class="earnings-bottom">
 						<p>
-							<span>今日收益</span>
+							<span>{{date}}</span>
 							<span>{{amount}}</span>
 						</p>
 						<p></p>
 					</div>
 				</div>
 				<div class="section">
-					<picker mode="date" :value="date" bindchange="bindDateChange">
+					<picker mode="date" :value="date" @change="bindDateChange">
 						<div class="chooseDate">
 							查看更多收益
 						</div>
@@ -43,6 +43,7 @@
 				allAmount: 0,
 				amount: 0,
 				num2: '',
+				date:'今日收益'
 			}
 		},
 		components: {
@@ -65,6 +66,15 @@
 					}
 				});
 			},
+			bindDateChange(e) {
+				let time="24:00"
+				let that=this
+				that.date=e.mp.detail.value
+				var stringTime =that.date+ ' ' + time;
+				stringTime=stringTime.replace(/-/g, '/');
+				var timestamp2 = Date.parse(new Date(stringTime));
+				that.getorderAmount(timestamp2)
+			},
 			animateAllAmount(endvalue) {
 				let that = this
 				let allAmount = new NumberAnimate({
@@ -79,19 +89,26 @@
 
 					}
 				});
+			},
+			getorderAmount(currentday){
+				let params = {}
+				let that = this
+				wx.showLoading({title: '加载中',})
+				params.shopId = wx.getStorageSync('shopId')
+				params.currentday = currentday;
+				Api.orderAmount(params).then(function(res) {
+					if(res.code == 0) {
+						wx.hideLoading()
+						that.animateAmount(res.amount)
+						that.animateAllAmount(res.allAmount)
+					}
+				})
 			}
 		},
 		mounted() {
-			let params = {}
-			let that = this
-			params.shopId = wx.getStorageSync('shopId')
-			params.currentday = (new Date()).getTime();
-			Api.orderAmount(params).then(function(res) {
-				if(res.code == 0) {
-					that.animateAmount(100.22)
-					that.animateAllAmount(300.44)
-				}
-			})
+			let that=this
+			let nowTime=(new Date()).getTime()
+			that.getorderAmount(nowTime)
 		}
 
 	}

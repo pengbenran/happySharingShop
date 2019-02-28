@@ -1,38 +1,52 @@
 <template>
 	<div class="rec-wrap centered">
 		<div class="rec-li" v-for="(goodlist , index) in orderList" :key="goodlist.orderId">
+			<div class="top">
+				<span>订单编号:{{goodlist.sn}}</span>
+				<span>下单时间:{{goodlist.createTime}} </span>
+			</div>
 			<div class="center">
 				<div class="cant clr"> 
 					<div class="img fl"><img :src="goodlist.thumbnail" /></div>
 					<div class="rec-center fl">
 						<div class="tit fontHidden">{{goodlist.goodName}}</div>
 						<!-- <div class="name">{{goodlist.name}}</div> -->
-						<div class="present ">￥:{{goodlist.goodsAmount}}</div>
-						<div class="time "></div>
-						<!---->
-						<div class="top">
-							<span>订单编号:{{goodlist.sn}}</span>
-							<span>下单时间:{{goodlist.createTime}} </span>
+						<div class="present">
+							<span>￥:{{goodlist.goodsAmount}}</span>
+							<span class="num">数量 : {{goodlist.goodsNum}}</span>
 						</div>
-					</div>
-					<div class="rec-right fr">
-						<div class="num ">数量 : {{goodlist.goodsNum}}</div>
-						<div class="total">订单总额:{{goodlist.needPayMoney}}</div>
+						<div class="time"><span>推荐师优惠:{{goodlist.recommend}}元</span><span>佣金抵扣:{{goodlist.balance}}元</span></div>
+						<!---->			
 					</div>
 				</div>
 			</div>
 			<div class="xian"></div>
 			<div class="bottom">
 				<span>购买人:{{goodlist.memberName}}</span>
-				<span @click="orderDetail">订单详情</span>
+				<span @click="orderDetail(index)">订单详情</span>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script>
+import store from '@/store/store'
 export default {
-  props: ['orderList']
+  props: ['orderList'],
+  data(){
+  	return{
+
+  	}
+  },
+  methods:{
+  	orderDetail(index){
+  		let that=this
+  		store.commit("stateGoodDetail",that.orderList[index])
+  		wx.navigateTo({
+  			url:'../order-detail/main'
+  		})
+  	},
+  }
 }
 </script>
 
@@ -45,6 +59,10 @@ export default {
 			margin-top: 56px;
 		}
 		.top {
+			display: flex;
+			justify-content: space-between;
+			height: 40px;
+			line-height:40px;
 			span {
 				font-size: 12px;
 				color: #999999;
@@ -63,7 +81,7 @@ export default {
 				}
 			}
 			.rec-center {
-				width: 210px;
+				width: 250px;
 				line-height: 23px;
 				overflow: hidden;
 				padding-left: 12px;
@@ -81,6 +99,13 @@ export default {
 				.present {
 					color: #ff0000;
 					font-size: 17px;
+					display: flex;
+					justify-content: space-between;
+					.num {
+					color: #999999;
+					font-size: 12px;
+					line-height: 23px;
+				}
 				}
 			
 				.original {
@@ -91,6 +116,8 @@ export default {
 				.time {
 					color: #ffb10f;
 					font-size: 11px;
+					display: flex;
+					justify-content: space-between;
 				}
 			}
 			.rec-right {
@@ -101,11 +128,6 @@ export default {
 					color: #333333;
 					font-size: 12px;
 					line-height: 68px;
-				}
-				.num {
-					color: #999999;
-					font-size: 12px;
-					line-height: 23px;
 				}
 				.sell {
 					color: #666666;
@@ -123,7 +145,7 @@ export default {
 		}
 		.bottom {
 			display: flex;
-			justify-content: flex-end;
+			justify-content: space-between;
 			align-items: center;
 			span {
 				&:nth-child(1) {

@@ -15,16 +15,16 @@
 				<orderList :orderList="orderList"></orderList>
 			</swiper-item>
 			<!--2-->
-			<swiper-item>
-				2
+			<swiper-item style="overflow: scroll;"> 
+				<orderList :orderList="orderList"></orderList>
 			</swiper-item>
 			<!--3-->
-			<swiper-item>
-				3
+			<swiper-item style="overflow: scroll;"> 
+				<orderList :orderList="orderList"></orderList>
 			</swiper-item>
 			<!--4-->
-			<swiper-item>
-				4
+			<swiper-item style="overflow: scroll;"> 
+				<orderList :orderList="orderList"></orderList>
 			</swiper-item>
 		</swiper>
 
@@ -48,7 +48,7 @@
 				}, {
 					name: "已使用",
 				}],
-				orderArry: [],
+				orderArry: [[],[],[],[]],
 				orderList:[]
 			}
 		},
@@ -63,16 +63,14 @@
 				that.curr = e
 			},
 			changeTab(e) {
-				this.curr = e.mp.detail.current;
-			},
-			orderDetail(){
-				wx.navigateTon({
-					url:'../order-detail/main'
-				})
 				let that=this
 				that.curr = e.mp.detail.current;
-			    that.getAllOrder(that.curr)
-				
+				if(that.orderArry[that.curr].length==0){
+					that.getAllOrder(that.curr)
+				}
+				else{
+				   that.orderList=that.orderArry[that.curr]
+				}
 			},
 			getAllOrder(status){
 				let that=this
@@ -93,15 +91,12 @@
 						that.orderArry[that.curr]=res.orderStatus
 						that.orderList=that.orderArry[that.curr]
 					}
-					console.log(that.orderList)
 				})		
 			}
 		},
 		async mounted(){ // 调用应用实例的方法获取全局数据
 			let that=this
-			that.getAllOrder(0)
-			
-			
+			that.getAllOrder(0)	
 		}
 	}
 </script>
