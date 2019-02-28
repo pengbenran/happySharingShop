@@ -5,20 +5,20 @@
 				<span v-for="(item,index) in tab" :key="index" @click="tabs(index)" :class="curr==index?'on':''">{{item.title}}</span>
 			</div>
 		</scroll-view>
-		<swiper style="height:100vh" duration='350' :current="curr" @change="changeTab">
+		<swiper style="height:100vh;overflow:scroll;" duration='350' :current="curr" @change="changeTab">
 			<!--已上架的数据-->
 			<swiper-item>
 				<!--shop-->
 				<div class="shop">
-					<div class="shop-li" v-for="(item,index) in shop">
+					<div class="shop-li" v-for="(item,index) in shopStatus1" :key="item.id">
 						<div class="shop-li-img">
-							<img :src="shop.img" />
+							<img :src="item.thumbnail" />
 						</div>
 						<div class="shop-li-cant">
-							<p>{{item.name}}</p>
+							<p class="fontHidden">{{item.goodName}}</p>
 							<p>
-								<span>销量: {{item.xl}}</span>
-								<span>库存: {{item.kc}}</span>
+								<span>销量: {{item.showSales}}</span>
+								<span>库存: {{item.showPrice}}</span>
 							</p>
 						</div>
 					</div>
@@ -28,12 +28,12 @@
 			<swiper-item>
 				<!--shop-->
 				<div class="shop">
-					<div class="shop-li" v-for="(item,index) in shop">
+					<div class="shop-li" v-for="(item,index) in shopStatus2" :key="item.id">
 						<div class="shop-li-img">
 							<img :src="shop.img" />
 						</div>
 						<div class="shop-li-cant">
-							<p>{{item.name}}</p>
+							<p class="fontHidden">{{item.name}}</p>
 							<p>
 								<span>销量: {{item.xl}}</span>
 								<span>库存: {{item.kc}}</span>
@@ -47,6 +47,7 @@
 </template>
 
 <script>
+	import api from "@/api/api"
 	export default {
 		data() {
 			return {
@@ -59,42 +60,47 @@
 						title: "已下架"
 					}
 				],
-				shop: [{
-						name: "尚方美味自助火锅",
-						img: "/static/images/LOGO.gif",
-						xl: 9999,
-						kc: 9999
-					},
-					{
-						name: "尚方美味自助火锅",
-						img: "/static/images/LOGO.gif",
-						xl: 9999,
-						kc: 9999
-					},
-					{
-						name: "尚方美味自助火锅",
-						img: "/static/images/LOGO.gif",
-						xl: 9999,
-						kc: 9999
-					},
-					
-				]
+				shopStatus1: [],
+				shopStatus2: []
 			}
 		},
 		components: {
 
 		},
-
 		methods: {
 			tabs: function(e) {
 				this.curr = e
+			},
+			getGoods(status){
+				let params={}
+				let that=this
+				params.pageNum=1
+				params.pageSize=100
+				params.shopId=wx.getStorageSync('shopId')
+				params.status=status
+				api.getGoods(params).then(function(res){
+					if(status==1){
+						that.shopStatus1=res.rows
+					}
+					else{
+						that.shopStatus2=res.rows
+					}
+					return 
+				})
 			},
 			changeTab(e) {
 				this.curr = e.mp.detail.current;
 			}
 		},
-    }
-</script>
+
+		async mounted(){
+			let that=this
+			await that.getGoods(1)
+			await that.getGoods(2)
+		}
+	}
+	</script>
+
 
 <style scoped lang="less">
 	.tab {
@@ -152,6 +158,7 @@
 						color: #111111;
 						font-size: 15px;
 						font-weight: bold;
+						width:260px;
 					}
 					&:nth-child(2) {
 						color: #666666;

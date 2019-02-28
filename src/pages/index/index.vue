@@ -1,42 +1,48 @@
 <template>
 	<div class="container">
-		<div class="logo"><img src="/static/images/guqin.png"/></div>
-		<swiper vertical  @change='stpp' style="height: 100vh;">
-			   <swiper-item>
-			<div class="img">
-				<img src="/static/images/LOGO.gif" />
-			</div>
-			<div class="earnings">
-				<div class="earnings-top">
-					<p>
-						<span>总收益</span>
-						<span>84566</span>
-					</p>
-					<p></p>
+		<div class="logo"><img src="/static/images/guqin.png" /></div>
+		<swiper vertical @change='stpp' style="height: 100vh;">
+			<swiper-item>
+				<div class="img">
+					<img src="/static/images/LOGO.gif" />
 				</div>
-				<div class="earnings-bottom">
-					<p>
-						<span>今日收益</span>
-						<span>3424</span>
-					</p>
-					<p></p>
+				<div class="earnings">
+					<div class="earnings-top">
+						<p>
+							<span>总收益</span>
+							<span>{{allAmount}}</span>
+						</p>
+						<p></p>
+					</div>
+					<div class="earnings-bottom">
+						<p>
+							<span>今日收益</span>
+							<span>{{amount}}</span>
+						</p>
+						<p></p>
+					</div>
 				</div>
-			</div>
-			<div  class="more">
-				<p>查看更多收益</p>
-				<p></p>
-			</div>
-			<div style="width: 100%; height: 300px;background-color:#FFFFFF;position: absolute;bottom: 0;"></div>
-			  </swiper-item>
+				<div class="section">
+					<picker mode="date" :value="date" bindchange="bindDateChange">
+						<div class="chooseDate">
+							查看更多收益
+						</div>
+					</picker>
+				</div>
+				<div style="width: 100%; height: 300px;background-color:#FFFFFF;position: absolute;bottom: 0;"></div>
+			</swiper-item>
 		</swiper>
 	</div>
 </template>
-
 <script>
+	import Api from '@/api/api'
+	import NumberAnimate from "@/utils/NumberAnimate.js"
 	export default {
 		data() {
 			return {
-
+				allAmount: 0,
+				amount: 0,
+				num2: '',
 			}
 		},
 		components: {
@@ -44,21 +50,63 @@
 		},
 
 		methods: {
-		
-			stpp:function(){
-				console.log(1111)
+			animateAmount(endvalue) {
+				let that = this
+				let amount = new NumberAnimate({
+					from: endvalue,
+					speed: 2000,
+					refreshTime: 100,
+					decimals: 2,
+					onUpdate: () => {
+						that.amount = amount.tempValue
+					},
+					onComplete: () => {
+
+					}
+				});
+			},
+			animateAllAmount(endvalue) {
+				let that = this
+				let allAmount = new NumberAnimate({
+					from: endvalue,
+					speed: 2000,
+					refreshTime: 100,
+					decimals: 2,
+					onUpdate: () => {
+						that.allAmount = allAmount.tempValue
+					},
+					onComplete: () => {
+
+					}
+				});
 			}
 		},
+		mounted() {
+			let params = {}
+			let that = this
+			params.shopId = wx.getStorageSync('shopId')
+			params.currentday = (new Date()).getTime();
+			Api.orderAmount(params).then(function(res) {
+				if(res.code == 0) {
+					that.animateAmount(100.22)
+					that.animateAllAmount(300.44)
+				}
+			})
+		}
 
 	}
 </script>
 
 <style scoped lang="less">
-.logo{
-	width:138px ;height: 42px;position: fixed;bottom: 50px;
-	left: 50%;
-	margin-left: -69px;
-}
+		.logo {
+		width: 138px;
+		height: 42px;
+		position: fixed;
+		bottom: 50px;
+		left: 50%;
+		margin-left: -69px;
+	}
+	
 	.img {
 		margin: 0 auto;
 		width: 90px;
@@ -119,39 +167,27 @@
 			margin-top: 20px;
 		}
 	}
-	
-	.more {
-		position: relative;
-		z-index: 99;
-		width: 351px;
-		height: 44px;
-		margin: 20px auto 51px auto;
-		font-weight: bold;
-		p {
-			display: block;
-			&:nth-child(1) {
-				position: absolute;
-				top: 0px;
-				left: 0;
-				width: 100%;
-				height: 100%;
-				background: #c8e1fa;
-				border-radius: 6px;
-				text-align: center;
-				line-height: 44px;
-				color: #067ef9;
-				font-size: 15px;
-				span {}
+
+			.section {
+				position: relative;
+				z-index: 99;
+				width: 351px;
+				height: 44px;
+				margin: 20px auto 51px auto;
+				.chooseDate {
+					position: absolute;
+					top: 0px;
+					left: 0;
+					width: 100%;
+					height: 100%;
+					background: #c8e1fa;
+					border-radius: 6px;
+					text-align: center;
+					line-height: 44px;
+					color: #067ef9;
+					font-size: 15px;
+				}
+			
 			}
-			&:nth-child(2) {
-				width: 80%;
-				height: 100%;
-				background: #c8e1fa;
-				margin: auto;
-				top: 0px;
-				left: 0;
-				box-shadow: 0 5px 10px rgba(6, 126, 249, .3);
-			}
-		}
-	}
+		
 </style>

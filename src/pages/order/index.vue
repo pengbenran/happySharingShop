@@ -9,28 +9,28 @@
 			</div>
 		</scroll-view>
 		<!--数据-->
-		<swiper style="height:100vh;" duration='350' :current="curr" @change="changeTab">
+		<swiper  style="height:100vh; overflow: scroll;"   duration='350' :current="curr" @change="changeTab">
 			<!--1-->
 			<swiper-item>
 				<div class="rec-wrap centered">
-					<div class="rec-li" v-for="(goodlist , index) in rec" :key="goodlist.recId">
+					<div class="rec-li" v-for="(goodlist , index) in orderArry[0]" :key="goodlist.orderId">
 						<div class="center">
-							<div class="cant clr">
-								<div class="img fl"><img :src="goodlist.img" /></div>
+							<div class="cant clr"> 
+								<div class="img fl"><img :src="goodlist.thumbnail" /></div>
 								<div class="rec-center fl">
-									<div class="tit">{{goodlist.title}}</div>
-									<div class="name">{{goodlist.name}}</div>
-									<div class="present ">￥:{{goodlist.price}}</div>
+									<div class="tit fontHidden">{{goodlist.goodName}}</div>
+									<!-- <div class="name">{{goodlist.name}}</div> -->
+									<div class="present ">￥:{{goodlist.goodsAmount}}</div>
 									<div class="time ">{{goodlist.time}}</div>
 									<!---->
 									<div class="top">
 										<span>订单编号:{{goodlist.sn}}</span>
-										<span>下单时间:2019-08-32 </span>
+										<span>下单时间:{{}} </span>
 									</div>
 								</div>
 								<div class="rec-right fr">
 									<div class="num ">数量 : {{goodlist.num}}</div>
-									<div class="total">订单总额:{{goodlist.orderAmount}}</div>
+									<div class="total">订单总额:{{goodlist.needPayMoney}}</div>
 								</div>
 							</div>
 						</div>
@@ -60,6 +60,7 @@
 </template>
 
 <script>
+	import api from "@/api/api"
 	export default {
 		data() {
 			return {
@@ -73,46 +74,7 @@
 				}, {
 					name: "已使用",
 				}],
-				rec: [{
-					sn: 1212121,
-					img: "https://oss.etuetf.cn/advImage/2346c6c9-f227-4f7c-a801-62545f687818.jpg",
-					payStatus: 2,
-					status: 0,
-					shipStatus: 2,
-					shopName: "世茂/金塔/新力/莲塘/四店通用",
-					image: '',
-					name: "西江月园林艺术餐厅，真正的艺术赣菜,快来抢购！",
-					num: 1,
-					price: "16.9",
-					orderAmount: "83",
-					num: "1"
-				}, {
-					sn: 1212121,
-					img: "https://oss.etuetf.cn/advImage/2346c6c9-f227-4f7c-a801-62545f687818.jpg",
-					payStatus: 2,
-					status: 0,
-					shipStatus: 2,
-					shopName: "世茂/金塔/新力/莲塘/四店通用",
-					image: '',
-					name: "西江月园林艺术餐厅，真正的艺术赣菜,快来抢购！",
-					num: 1,
-					price: "16.9",
-					orderAmount: "83",
-					num: "1"
-				}, {
-					sn: 1212121,
-					img: "https://oss.etuetf.cn/advImage/2346c6c9-f227-4f7c-a801-62545f687818.jpg",
-					payStatus: 2,
-					status: 0,
-					shipStatus: 2,
-					shopName: "世茂/金塔/新力/莲塘/四店通用",
-					image: '',
-					name: "西江月园林艺术餐厅，真正的艺术赣菜,快来抢购！",
-					num: 1,
-					price: "16.9",
-					orderAmount: "83",
-					num: "1"
-				}, ]
+				orderArry: [],
 			}
 		},
 
@@ -132,11 +94,33 @@
 				wx.navigateTon({
 					url:'../order-detail/main'
 				})
+				let that=this
+				that.curr = e.mp.detail.current;
+			    that.getAllOrder(that.curr)
+				
+			},
+			getAllOrder(status){
+				let that=this
+				let params={}
+				wx.showLoading({
+					title: '加载中',
+				})
+				params.shopId=wx.getStorageSync('shopId')
+				if(status!=0){
+					params.status=status
+				}
+				api.getAllOrder(params).then(function(res){
+					wx.hideLoading();
+					if(res.code==0){
+						that.orderArry[that.curr]=res.orderStatus
+					}
+					console.log(that.orderArry)
+				})		
 			}
 		},
-
-		created() { // 调用应用实例的方法获取全局数据
-
+		mounted(){ // 调用应用实例的方法获取全局数据
+			let that=this
+			that.getAllOrder(0)
 		}
 	}
 </script>
