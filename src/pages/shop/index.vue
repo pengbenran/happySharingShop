@@ -1,25 +1,50 @@
 <template>
 	<div class="container">
-		<!--tab-->
-		<div class="tab">
-			<span v-for="(item,index) in tab"  @click="tabs(index)" :class="curr==index?'on':''">{{item.title}}</span>
-		</div>
-		
-		<!--shop-->
-        <div class="shop">
-          <div class="shop-li" v-for="(item,index) in shop" >
-             <div class="shop-li-img">
-             	 <img :src="shop.img"/> 
-             </div>
-             <div class="shop-li-cant">
-             	<p>{{item.name}}</p>
-             	<p>
-             		<span>销量: {{item.xl}}</span>
-             		<span>库存: {{item.kc}}</span>
-             	</p>
-             </div>
-          </div>
-        </div>
+     
+		<scroll-view scroll-x>
+			<div class="tab">
+				<span v-for="(item,index) in tab" :key="index" @click="tabs(index)" :class="curr==index?'on':''">{{item.title}}</span>
+			</div>
+		</scroll-view>
+
+		<swiper style="height:100vh;overflow:scroll;" duration='350' :current="curr" @change="changeTab">
+			<!--已上架的数据-->
+			<swiper-item>
+				<!--shop-->
+				<div class="shop">
+					<div class="shop-li" v-for="(item,index) in shopStatus1" :key="item.id">
+						<div class="shop-li-img">
+							<img :src="item.thumbnail" />
+						</div>
+						<div class="shop-li-cant">
+							<p class="fontHidden">{{item.goodName}}</p>
+							<p>
+								<span>销量: {{item.showSales}}</span>
+								<span>库存: {{item.showPrice}}</span>
+							</p>
+						</div>
+					</div>
+				</div>
+			</swiper-item>
+			<!--已下架的数据-->
+			<swiper-item>
+				<!--shop-->
+				<div class="shop">
+					<div class="shop-li" v-for="(item,index) in shopStatus2" :key="item.id">
+						<div class="shop-li-img">
+							<img :src="shop.img" />
+						</div>
+						<div class="shop-li-cant">
+							<p class="fontHidden">{{item.name}}</p>
+							<p>
+								<span>销量: {{item.xl}}</span>
+								<span>库存: {{item.kc}}</span>
+							</p>
+						</div>
+					</div>
+				</div>
+			</swiper-item>
+		</swiper>
 	</div>
 </template>
 
@@ -28,84 +53,96 @@
 	export default {
 		data() {
 			return {
-				curr:0,
-				tab:[
-				   {title:"已上架"},
-				   {title:"已下架"}
+//				hei:"1000px",
+				curr: 0,
+				tab: [{
+						title: "已上架"
+					},
+					{
+						title: "已下架"
+					}
 				],
-                shop:[
-                   {name:"尚方美味自助火锅",img:"/static/images/LOGO.gif",xl:9999,kc:9999},
-                   {name:"尚方美味自助火锅",img:"/static/images/LOGO.gif",xl:9999,kc:9999},
-                   {name:"尚方美味自助火锅",img:"/static/images/LOGO.gif",xl:9999,kc:9999},
-                ]
+				shopStatus1: [],
+				shopStatus2: []
 			}
 		},
 		components: {
 
 		},
-
 		methods: {
-           tabs:function(index){            	
-           	 let that = this
-           	 that.curr = index
-           },
-           getGoods(status){
-           	let params={}
-           	params.pageNum=1
-           	params.pageSize=10
-           	params.shopId=wx.getStorageSync('shopId')
-           	params.status=1
-           	api.getGoods(params).then(function(res){
-           		console.log(res)
-           	})
-           }
+			tabs: function(e) {
+				this.curr = e
+			},
+			getGoods(status){
+				let params={}
+				let that=this
+				params.pageNum=1
+				params.pageSize=100
+				params.shopId=wx.getStorageSync('shopId')
+				params.status=status
+				api.getGoods(params).then(function(res){
+					if(status==1){
+						that.shopStatus1=res.rows
+					}
+					else{
+						that.shopStatus2=res.rows
+					}
+					return 
+				})
+			},
+			changeTab(e) {
+				this.curr = e.mp.detail.current;
+			}
 		},
-		mounted(){
+		async mounted(){
 			let that=this
-			that.getGoods(1)
+			await that.getGoods(1)
+			await that.getGoods(2)
 		}
-
 	}
-</script>
+	</script>
 
 <style scoped lang="less">
-     .tab{
-     	width: 100%;
-     	background: #FFFFFF;
-     	height: 40px;
-     	display: flex;
-     	justify-content: center;
-     	span{
-     		display:block; 
-     		width:50px;
-     		height: 38px;
-     		color: #999999;
-     		text-align: center;
-     		line-height: 40px;
-     		font-size: 14px;
-     		&:nth-child(1){margin-right: 23px;}
-     		&:nth-child(2){margin-left: 23px;}
-     	}
-     	.on{
-     		color: #01a4bf;
-     		border-bottom: 1px solid #1AAD19;
-     	}
-     }
-
-
-	.shop{
+	.tab {
 		width: 100%;
-	    padding-bottom: 40px;
-		.shop-li{
-				display: flex;
-				align-items: center;
-				padding: 12px 12px 0 12px;
-				box-sizing: border-box;
-			    width: 100%;
-			    &:nth-child(1){
-			    	padding: 20px 12px 0 12px;
-			    }
-			.shop-li-img{
+		background: #FFFFFF;
+		height: 40px;
+		display: flex;
+		justify-content: center;
+		span {
+			display: block;
+			width: 50px;
+			height: 38px;
+			color: #999999;
+			text-align: center;
+			line-height: 40px;
+			font-size: 14px;
+			&:nth-child(1) {
+				margin-right: 23px;
+			}
+			&:nth-child(2) {
+				margin-left: 23px;
+			}
+		}
+		.on {
+			color: #01a4bf;
+			border-bottom: 1px solid #01a4bf;
+		}
+	}
+	
+	.shop {
+		width: 100%;
+		padding-bottom: 40px;
+		.shop-li {
+			display: flex;
+			align-items: center;
+			padding: 12px 12px 0 12px;
+			box-sizing: border-box;
+			width: 100%;
+			&:nth-child(1) {
+				padding: 20px 12px 0 12px;
+			}
+			.shop-li-img {
 				width: 60px;
 				height: 60px;
 				background-color: orange;
@@ -113,19 +150,20 @@
 				border-radius: 6px;
 				overflow: hidden;
 			}
-			.shop-li-cant{
+			.shop-li-cant {
 				line-height: 28px;
-				p{
-					&:nth-child(1){
+				p {
+					&:nth-child(1) {
 						color: #111111;
 						font-size: 15px;
 						font-weight: bold;
+						width:260px;
 					}
-					&:nth-child(2){
+					&:nth-child(2) {
 						color: #666666;
 						font-size: 13px;
-						span{
-							&:nth-child(2){
+						span {
+							&:nth-child(2) {
 								margin-left: 35px;
 							}
 						}

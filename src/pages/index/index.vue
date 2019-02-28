@@ -1,41 +1,37 @@
 <template>
 	<div class="container">
-		  <div class="img">
-		     <img  src="/static/images/LOGO.gif"/>
-		  </div>
-      <div class="earnings">
-        <div class="earnings-top">
-        	<p>
-        		<span>总收益</span>
-        		<span>{{allAmount}}</span>
-        	</p>
-        	<p></p>
-        </div>  
-        <div class="earnings-bottom">
-        	<p>
-        		<span>今日收益</span>
-        		<span>{{amount}}</span>
-        	</p>
-        	<p></p>
-        </div>
-      </div>
-     <!--  <div class="more">
-      	<p class="picker">查看更多效果</p>
-      	<p></p>
-      </div> -->
-      <div class="section">
-      	<picker
-      	mode="date"
-      	:value="date"
-      	bindchange="bindDateChange"
-      	>
-      	<div class="chooseDate">
-      		查看更多收益
-      	</div>
-      </picker>
-  </div>
+		<div class="img">
+			<img  src="/static/images/LOGO.gif"/>
+		</div>
+		<div class="earnings">
+			<div class="earnings-top">
+				<p>
+					<span>总收益</span>
+					<span>{{allAmount}}</span>
+				</p>
+				<p></p>
+			</div>  
+			<div class="earnings-bottom">
+				<p>
+					<span>今日收益</span>
+					<span>{{amount}}</span>
+				</p>
+				<p></p>
+			</div>
+		</div>
+		<div class="section">
+			<picker
+			mode="date"
+			:value="date"
+			bindchange="bindDateChange"
+			>
+			<div class="chooseDate">
+				查看更多收益
+			</div>
+		</picker>
 	</div>
-</template>
+</div>
+</template> 
 
 <script>
 	import Api from '@/api/api'

@@ -1,106 +1,74 @@
 <template>
-	<!--类目-->
 	<div class="container">
-		<div class="order-nav">
-			<div @click="change(index)" v-for="(item,index) in nav" class="order-nav-li" :class="item.isSelect? 'active':''">
-				{{item.name}}
+		<!--分类-->
+		<scroll-view scroll-x>
+			<div class="order-nav">
+				<div @click="change(index)" v-for="(item,index) in nav" class="order-nav-li" :class="curr==index? 'active':''">
+					{{item.name}}
+				</div>
 			</div>
-		</div>
-
-		<!--列表-->
-		<div class="rec-wrap centered">
-			<div class="rec-li" v-for="(goodlist , index) in rec" :key="goodlist.recId">
-				<div class="center">
-					<div class="cant clr">
-						<div class="img fl"><img :src="goodlist.img" /></div>
-						<div class="rec-center fl">
-							<div class="tit">{{goodlist.title}}</div>
-							<div class="name">{{goodlist.name}}</div>
-							<div class="present ">￥:{{goodlist.price}}</div>
-							<div class="time ">{{goodlist.time}}</div>
-							<!---->
-							<div class="top">
-								<span>订单编号:{{goodlist.sn}}</span>
-								<span>下单时间:2019-08-32 </span>
+		</scroll-view>
+		<!--数据-->
+		<swiper  style="height:100vh; overflow: scroll;"   duration='350' :current="curr" @change="changeTab">
+			<!--1-->
+			<swiper-item> 
+				<div class="rec-wrap centered">
+					<div class="rec-li" v-for="(goodlist , index) in orderArry[0]" :key="goodlist.orderId">
+						<div class="center">
+							<div class="cant clr"> 
+								<div class="img fl"><img :src="goodlist.thumbnail" /></div>
+								<div class="rec-center fl">
+									<div class="tit fontHidden">{{goodlist.goodName}}</div>
+									<!-- <div class="name">{{goodlist.name}}</div> -->
+									<div class="present ">￥:{{goodlist.goodsAmount}}</div>
+									<div class="time ">{{goodlist.time}}</div>
+									<!---->
+									<div class="top">
+										<span>订单编号:{{goodlist.sn}}</span>
+										<span>下单时间:{{}} </span>
+									</div>
+								</div>
+								<div class="rec-right fr">
+									<div class="num ">数量 : {{goodlist.num}}</div>
+									<div class="total">订单总额:{{goodlist.needPayMoney}}</div>
+								</div>
 							</div>
 						</div>
-						<div class="rec-right fr">							
-							<div class="num ">数量 : {{goodlist.num}}</div>
-							<div class="total">订单总额:{{goodlist.orderAmount}}</div>
+						<div class="xian"></div>
+						<div class="bottom">
+							<span>买家名称</span>
+							<span @click="orderDetail">订单详情</span>
 						</div>
 					</div>
 				</div>
-				<div class="bottom">
-					<span>买家名称</span>
-					<span @click="orderDetail">订单详情</span>
-				</div>
-
-			</div>
-		</div>
-
-		<!--空空如也-->
-		<!-- <div class="not" style="display: none;"><img src="/static/images/not.png"/></div> -->
+			</swiper-item>
+			<!--2-->
+			<swiper-item > 1</swiper-item>
+			<!--3-->
+			<swiper-item> 2 </swiper-item>
+			<!--4-->
+			<swiper-item> 3 </swiper-item>
+		</swiper>
+			
 	</div>
 </template>
 
 <script>
+	import api from "@/api/api"
 	export default {
 		data() {
 			return {
-				unionid: '',
+				curr: 0,
 				nav: [{
 					name: "全部",
-					isSelect: true
 				}, {
 					name: "待付款",
-					isSelect: false
 				}, {
 					name: "待使用",
-					isSelect: false
 				}, {
 					name: "已使用",
-					isSelect: false
 				}],
-				rec: [{
-					sn: 1212121,
-					img: "https://oss.etuetf.cn/advImage/2346c6c9-f227-4f7c-a801-62545f687818.jpg",
-					payStatus: 2,
-					status: 0,
-					shipStatus: 2,
-					shopName: "世茂/金塔/新力/莲塘/四店通用",
-					image: '',
-					name: "西江月园林艺术餐厅，真正的艺术赣菜,快来抢购！",
-					num: 1,
-					price: "16.9",
-					orderAmount: "83",
-					num: "1"
-				}, {
-					sn: 1212121,
-					img: "https://oss.etuetf.cn/advImage/2346c6c9-f227-4f7c-a801-62545f687818.jpg",
-					payStatus: 2,
-					status: 0,
-					shipStatus: 2,
-					shopName: "世茂/金塔/新力/莲塘/四店通用",
-					image: '',
-					name: "西江月园林艺术餐厅，真正的艺术赣菜,快来抢购！",
-					num: 1,
-					price: "16.9",
-					orderAmount: "83",
-					num: "1"
-				}, {
-					sn: 1212121,
-					img: "https://oss.etuetf.cn/advImage/2346c6c9-f227-4f7c-a801-62545f687818.jpg",
-					payStatus: 2,
-					status: 0,
-					shipStatus: 2,
-					shopName: "世茂/金塔/新力/莲塘/四店通用",
-					image: '',
-					name: "西江月园林艺术餐厅，真正的艺术赣菜,快来抢购！",
-					num: 1,
-					price: "16.9",
-					orderAmount: "83",
-					num: "1"
-				}, ]
+				orderArry: [],
 			}
 		},
 
@@ -109,46 +77,53 @@
 		},
 
 		methods: {
-			async onload() {
-				let that = this;
-				let data = {
-					unionId: Store.state.userInfo.unionid
-				}
-				// console.log()
-				let res = await API_ORDER.getOrderList(data).catch(err => {
-					Lib.showToast('失败', 'loading')
-				})
-				console.log(res, "查看请求参数")
-			},
-			change(index) {
+			change(e) {
 				let that = this
-				that.nav.map(item => {
-					item.isSelect = false
-					return item
-				})
-				that.nav[index].isSelect = true
-				console.log(that.nav)
+				that.curr = e
 			},
-			orderDetail() {
-                    wx.navigateTo({
-                    	url:'../order-detail/main'
-                    })
+			changeTab(e) {
+				let that=this
+				that.curr = e.mp.detail.current;
+			    that.getAllOrder(that.curr)
+				
+			},
+			getAllOrder(status){
+				let that=this
+				let params={}
+				wx.showLoading({
+					title: '加载中',
+				})
+				params.shopId=wx.getStorageSync('shopId')
+				if(status!=0){
+					params.status=status
+				}
+				api.getAllOrder(params).then(function(res){
+					wx.hideLoading();
+					if(res.code==0){
+						that.orderArry[that.curr]=res.orderStatus
+					}
+					console.log(that.orderArry)
+				})		
 			}
 		},
-		//		onLoad(){
-		//			this.unionid = Store.state.userInfo.unionid
-		//			console.log(Store.state.userInfo,"asdasda")
-		//          this.onload();
-		//		},
-
-		created() { // 调用应用实例的方法获取全局数据
-
+		mounted(){ // 调用应用实例的方法获取全局数据
+			let that=this
+			that.getAllOrder(0)
 		}
 	}
 </script>
 
 <style scoped lang="less">
 	/*空空如也*/
+	
+	.xian {
+		width: 100%;
+		height: 1px;
+		background-color: #dedede;
+		padding: 0 12px;
+		box-sizing: border-box;
+		margin: 12px 0;
+	}
 	
 	.not {
 		width: 133px;
@@ -164,6 +139,7 @@
 		position: fixed;
 		top: 0;
 		display: flex;
+		z-index: 99;
 		justify-content: space-around;
 		background-color: #fff;
 		width: 100%;
@@ -175,10 +151,9 @@
 			font-size: 14px;
 			color: #111111;
 		}
-		.active { 
-			color:#01a4bf;
-             border-bottom:1px solid #1AAD19;
-
+		.active {
+			color: #01a4bf;
+			border-bottom: 1px solid #01a4bf;
 		}
 	}
 	/*列表*/
@@ -189,9 +164,9 @@
 			margin-top: 56px;
 		}
 		.top {
-			span{
+			span {
 				font-size: 12px;
-				color: #999999;				
+				color: #999999;
 				display: block;
 			}
 		}
@@ -244,10 +219,9 @@
 				/*line-height: 65px;*/
 				text-align: right;
 				.total {
-				    color: #333333;
+					color: #333333;
 					font-size: 12px;
 					line-height: 68px;
-					
 				}
 				.num {
 					color: #999999;
