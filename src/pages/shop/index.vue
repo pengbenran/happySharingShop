@@ -2,7 +2,7 @@
 	<div class="container">
 		<scroll-view scroll-x>
 			<div class="tab">
-				<span v-for="(item,index) in tab" :key="index" @click="tabs(index)" :class="curr==index?'on':''">{{item.title}}</span>
+				<span v-for="(item,index) in tab"  @click="tabs(index)" :class="curr==index?'on':''">{{item.title}}</span>
 			</div>
 		</scroll-view>
 		<swiper style="height:100vh;overflow:scroll;" duration='350' :current="curr" @change="changeTab">
@@ -32,13 +32,13 @@
 				<div class="shop">
 					<div class="shop-li" v-for="(item,index) in shopStatus2" :key="item.id">
 						<div class="shop-li-img">
-							<img :src="shop.img" />
+							<img :src="item.thumbnail" />
 						</div>
 						<div class="shop-li-cant">
-							<p class="fontHidden">{{item.name}}</p>
+							<p class="fontHidden">{{item.goodName}}</p>
 							<p>
-								<span>销量: {{item.xl}}</span>
-								<span>库存: {{item.kc}}</span>
+								<span>销量: {{item.showSales}}</span>
+								<span>库存: {{item.showPrice}}</span>
 							</p>
 						</div>
 					</div>
@@ -72,8 +72,9 @@
 
 		},
 		methods: {
-			tabs: function(e) {
-				this.curr = e
+			tabs: function(index) {
+				let that=this
+				that.curr = index
 			},
 			getGoods(status) {
 				let params = {}
